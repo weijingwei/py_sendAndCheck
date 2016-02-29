@@ -1,4 +1,3 @@
-
 from collections import OrderedDict
 from threading import Thread
 import time
@@ -25,17 +24,22 @@ class EventHandler(object):
             if not value:
                 self.item = key
                 break
+        if self.dict[key]:
+            return
         host = self.messages.getValue("socket1", "host")
         port = int(self.messages.getValue("socket1", "port"))
         params = (("deliverItem", self.item), self.sendCallBack)
-#         检查当前item在服务器的状态
+#         检查当前item在服务器的状态，7次
         Thread(target=TCPClient(host, port).send, args=params).start()
-        Thread(target=self.check, args=(self.item,)).start()
+        self.check(self.item)
         
     def sendCallBack(self, params):
-        print("sendCallBack:", str(params))
+        if params[1]:
+            print("Send", params[0], "成功")
+        elif len(params) == 3:
+            print("Send", params[0], "出现异常", params[2])
     
-#     轮询检查服务器端item的还行状况
+#     轮询检查服务器端item的还行状况，7次
     def check(self, item):
         times = 0
         while times < 7:
@@ -50,11 +54,14 @@ class EventHandler(object):
             times += 1
         
     def checkCallBack(self, params):
-        print("checkCallBack:-----------", str(params[0]) ,str(params[1]))
         if params[1]:
             self.dict[params[0]] = params[1]
-            print(self.dict.items())
+            print("Check", params[0], "成功。当前队列状态为：", self.dict.items())
             self.send()
+        elif len(params) == 3:
+            print("Check", params[0], "出现异常：", params[2])
+        else:
+            print("Check", params[0], "未得到结果")
             
 if __name__ == '__main__':
     handler = EventHandler()

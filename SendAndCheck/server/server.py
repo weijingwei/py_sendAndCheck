@@ -1,10 +1,8 @@
 from pickle import loads, dumps
 from socketserver import BaseRequestHandler, ThreadingTCPServer
-import sys, os
 from threading import Thread
 
 
-sys.path.append(os.path.realpath(".."))
 class EchoRequestHandler(BaseRequestHandler):
     def handle(self):
         from utils import Utils

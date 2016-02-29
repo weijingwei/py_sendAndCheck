@@ -1,9 +1,7 @@
 from pickle import dumps, loads
 from socket import socket, AF_INET, SOCK_STREAM
-import sys, os
 
 
-sys.path.append(os.path.realpath(".."))
 class TCPClient(object):
     def __init__(self, host, port):
         self.s = socket(AF_INET, SOCK_STREAM)
@@ -22,8 +20,3 @@ class TCPClient(object):
 #             Thread(target=callback, args=(result,), daemon=True).start()
             callback(result)
         return result
-    
-if __name__ == '__main__':
-    from eventHandler import EventHandler
-    eventHandler = EventHandler()
-    eventHandler.openMainWindow()

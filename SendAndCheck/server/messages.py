@@ -4,7 +4,6 @@ from configparser import ConfigParser
 class Messages(object):
     def __init__(self):
         if not hasattr(self, "messages"):
-            print("initial message.properties")
             self.messages = {}
             parser = ConfigParser()  
             parser.read("messages.properties")  
