@@ -41,8 +41,9 @@ class EventHandler(object):
     
 #     轮询检查服务器端item的还行状况，7次
     def check(self, item):
+        totalTimes = 7
         times = 0
-        while times < 7:
+        while times < totalTimes:
             time.sleep(1)
             if self.dict[item]:
                 return
@@ -50,8 +51,9 @@ class EventHandler(object):
             port = int(self.messages.getValue("socket2", "port"))
             params = (("checkItemStatus", item), self.checkCallBack)
             Thread(target=TCPClient(host, port).send, args=params).start()
-#             TCPClient(host, port).send(("checkItemStatus", item), self.checkCallBack)
             times += 1
+        else:
+            print("已经对", item, "发起", totalTimes, "次校验，没有结果. 任务终止.")
         
     def checkCallBack(self, params):
         if params[1]:

@@ -7,7 +7,7 @@ class Utils(object):
 #         模拟处理业务逻辑消耗的时间
         try:
             global DICT
-            time.sleep(3)
+            time.sleep(10)
             DICT = {params:"received"}
             return (str(params), True)
         except Exception as e:
